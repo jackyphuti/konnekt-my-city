@@ -29,6 +29,11 @@ import {
   BarChart3,
   ChevronDown,
   ChevronUp,
+  Mail,
+  MessageSquare,
+  Phone,
+  Copy,
+  CheckCircle,
 } from "lucide-react"
 import { createBrowserClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
@@ -53,6 +58,8 @@ interface Profile {
 
 interface IssueProfile {
   full_name: string
+  email?: string
+  phone?: string
 }
 
 interface Issue {
@@ -90,6 +97,8 @@ export function MunicipalDashboard({ profile, issues: initialIssues, stats }: Mu
   const [newStatus, setNewStatus] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showAnalytics, setShowAnalytics] = useState(true)
+  const [copiedEmail, setCopiedEmail] = useState(false)
+  const [copiedPhone, setCopiedPhone] = useState(false)
   const router = useRouter()
   const supabase = createBrowserClient()
 
@@ -141,6 +150,17 @@ export function MunicipalDashboard({ profile, issues: initialIssues, stats }: Mu
       alert("Failed to update issue. Please try again.")
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const copyToClipboard = (text: string, type: "email" | "phone") => {
+    navigator.clipboard.writeText(text)
+    if (type === "email") {
+      setCopiedEmail(true)
+      setTimeout(() => setCopiedEmail(false), 2000)
+    } else {
+      setCopiedPhone(true)
+      setTimeout(() => setCopiedPhone(false), 2000)
     }
   }
 
@@ -503,18 +523,108 @@ export function MunicipalDashboard({ profile, issues: initialIssues, stats }: Mu
                             Manage Issue
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl">
+                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                           <DialogHeader>
                             <DialogTitle>Manage Issue</DialogTitle>
                             <DialogDescription>
-                              Update the status and add official comments to this issue.
+                              Update the status, add official comments, and contact the reporter if needed.
                             </DialogDescription>
                           </DialogHeader>
-                          <div className="space-y-4">
+                          <div className="space-y-6">
+                            {/* Issue Details */}
+                            <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                              <h3 className="font-semibold text-foreground">Issue Details</h3>
+                              <div className="grid gap-2 text-sm">
+                                <div>
+                                  <p className="text-muted-foreground">Title</p>
+                                  <p className="font-medium">{selectedIssue?.title}</p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground">Description</p>
+                                  <p className="font-medium">{selectedIssue?.description}</p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground">Location</p>
+                                  <p className="font-medium">{selectedIssue?.location}</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Reporter Contact Information */}
+                            <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg space-y-3">
+                              <h3 className="font-semibold text-foreground flex items-center gap-2">
+                                <MessageSquare className="h-4 w-4 text-blue-600" />
+                                Contact Reporter
+                              </h3>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex items-center justify-between p-2 bg-white rounded border">
+                                  <div className="flex items-center gap-2">
+                                    <User className="h-4 w-4 text-muted-foreground" />
+                                    <span className="font-medium">{selectedIssue?.profiles?.full_name || "Anonymous"}</span>
+                                  </div>
+                                </div>
+                                
+                                {selectedIssue?.profiles?.email && (
+                                  <div className="flex items-center justify-between p-2 bg-white rounded border hover:bg-gray-50 transition-colors">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                      <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                      <span className="truncate text-muted-foreground">{selectedIssue.profiles.email}</span>
+                                    </div>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => {
+                                        if (selectedIssue.profiles?.email) {
+                                          copyToClipboard(selectedIssue.profiles.email, "email")
+                                        }
+                                      }}
+                                      className="flex-shrink-0"
+                                    >
+                                      {copiedEmail ? (
+                                        <CheckCircle className="h-4 w-4 text-green-600" />
+                                      ) : (
+                                        <Copy className="h-4 w-4" />
+                                      )}
+                                    </Button>
+                                  </div>
+                                )}
+
+                                {selectedIssue?.profiles?.phone && (
+                                  <div className="flex items-center justify-between p-2 bg-white rounded border hover:bg-gray-50 transition-colors">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                      <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                      <span className="truncate text-muted-foreground">{selectedIssue.profiles.phone}</span>
+                                    </div>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => {
+                                        if (selectedIssue.profiles?.phone) {
+                                          copyToClipboard(selectedIssue.profiles.phone, "phone")
+                                        }
+                                      }}
+                                      className="flex-shrink-0"
+                                    >
+                                      {copiedPhone ? (
+                                        <CheckCircle className="h-4 w-4 text-green-600" />
+                                      ) : (
+                                        <Copy className="h-4 w-4" />
+                                      )}
+                                    </Button>
+                                  </div>
+                                )}
+
+                                {!selectedIssue?.profiles?.email && !selectedIssue?.profiles?.phone && (
+                                  <p className="text-xs text-muted-foreground p-2">Reporter contact information not available</p>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Update Status */}
                             <div>
                               <Label htmlFor="status">Update Status</Label>
                               <Select value={newStatus} onValueChange={setNewStatus}>
-                                <SelectTrigger id="status">
+                                <SelectTrigger id="status" className="mt-2">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -525,22 +635,29 @@ export function MunicipalDashboard({ profile, issues: initialIssues, stats }: Mu
                                 </SelectContent>
                               </Select>
                             </div>
+
+                            {/* Official Update */}
                             <div>
                               <Label htmlFor="update">Official Update</Label>
                               <Textarea
                                 id="update"
-                                placeholder="Add an official update or comment..."
+                                placeholder="Add an official update or comment that the reporter will see..."
                                 value={updateText}
                                 onChange={(e) => setUpdateText(e.target.value)}
                                 rows={4}
+                                className="mt-2"
                               />
+                              <p className="text-xs text-muted-foreground mt-1">
+                                This update will be visible to the reporter and the community
+                              </p>
                             </div>
+
                             <Button
                               onClick={handleUpdateIssue}
                               disabled={isSubmitting || !updateText.trim()}
                               className="w-full"
                             >
-                              {isSubmitting ? "Updating..." : "Submit Update"}
+                              {isSubmitting ? "Updating..." : "Submit Update & Status Change"}
                             </Button>
                           </div>
                         </DialogContent>

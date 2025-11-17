@@ -63,6 +63,20 @@ export default function IssuesMap({ issues }: IssuesMapProps) {
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(mapInstanceRef.current)
+
+        // Disable zoom/pan when tapping on markers (improves mobile UX)
+        mapInstanceRef.current.on("popupopen", () => {
+          mapInstanceRef.current.dragging.disable()
+        })
+        mapInstanceRef.current.on("popupclose", () => {
+          mapInstanceRef.current.dragging.enable()
+        })
+
+        // Improve mobile touch behavior
+        if (typeof window !== "undefined" && window.innerWidth <= 768) {
+          mapInstanceRef.current.touchZoom.disable()
+          mapInstanceRef.current.doubleClickZoom.enable()
+        }
       }
     }
 
@@ -94,18 +108,24 @@ export default function IssuesMap({ issues }: IssuesMapProps) {
         if (issue.latitude && issue.longitude) {
           // Create custom icon based on category color and status
           const iconColor = issue.status === "resolved" ? "#10B981" : issue.issue_categories?.color || "#3B82F6"
+          // Increase marker size for mobile touch targets
+          const isMobile = typeof window !== "undefined" && window.innerWidth <= 768
+          const markerSize = isMobile ? 40 : 30
+          const fontSize = isMobile ? "18px" : "14px"
+          const borderWidth = isMobile ? "4px" : "3px"
+
           const iconHtml = `
             <div style="
               background-color: ${iconColor};
-              width: 30px;
-              height: 30px;
+              width: ${markerSize}px;
+              height: ${markerSize}px;
               border-radius: 50%;
-              border: 3px solid white;
+              border: ${borderWidth} solid white;
               box-shadow: 0 2px 4px rgba(0,0,0,0.2);
               display: flex;
               align-items: center;
               justify-content: center;
-              font-size: 14px;
+              font-size: ${fontSize};
             ">
               ${issue.issue_categories?.icon || "📍"}
             </div>
@@ -114,72 +134,77 @@ export default function IssuesMap({ issues }: IssuesMapProps) {
           const customIcon = L.divIcon({
             html: iconHtml,
             className: "custom-marker",
-            iconSize: [30, 30],
-            iconAnchor: [15, 15],
+            iconSize: [markerSize, markerSize],
+            iconAnchor: [markerSize / 2, markerSize / 2],
           })
 
           const marker = L.marker([issue.latitude, issue.longitude], { icon: customIcon }).addTo(mapInstanceRef.current)
 
-          // Create popup content
+          // Create popup content - responsive width
+          const popupWidth = isMobile ? 200 : 300
           const popupContent = `
-            <div style="min-width: 250px; font-family: system-ui, -apple-system, sans-serif;">
+            <div style="max-width: ${popupWidth}px; font-family: system-ui, -apple-system, sans-serif;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                <span style="font-size: 18px;">${issue.issue_categories?.icon || "📍"}</span>
-                <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #1f2937;">${issue.title}</h3>
+                <span style="font-size: ${isMobile ? "16px" : "18px"};">${issue.issue_categories?.icon || "📍"}</span>
+                <h3 style="margin: 0; font-size: ${isMobile ? "14px" : "16px"}; font-weight: 600; color: #1f2937; line-height: 1.3;">${issue.title}</h3>
               </div>
               
-              <p style="margin: 0 0 12px 0; font-size: 14px; color: #6b7280; line-height: 1.4;">
-                ${issue.description.length > 100 ? issue.description.substring(0, 100) + "..." : issue.description}
+              <p style="margin: 0 0 12px 0; font-size: ${isMobile ? "12px" : "14px"}; color: #6b7280; line-height: 1.4;">
+                ${issue.description.length > 80 ? issue.description.substring(0, 80) + "..." : issue.description}
               </p>
               
-              <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+              <div style="display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap;">
                 <span style="
                   background-color: ${issue.status === "resolved" ? "#dcfce7" : issue.status === "in_progress" ? "#dbeafe" : "#f3f4f6"};
                   color: ${issue.status === "resolved" ? "#166534" : issue.status === "in_progress" ? "#1e40af" : "#374151"};
-                  padding: 2px 8px;
+                  padding: 2px 6px;
                   border-radius: 12px;
-                  font-size: 12px;
+                  font-size: ${isMobile ? "11px" : "12px"};
                   font-weight: 500;
+                  white-space: nowrap;
                 ">
                   ${issue.status.replace("_", " ")}
                 </span>
                 <span style="
                   background-color: ${issue.priority === "urgent" ? "#fef2f2" : issue.priority === "high" ? "#fff7ed" : "#f3f4f6"};
                   color: ${issue.priority === "urgent" ? "#dc2626" : issue.priority === "high" ? "#ea580c" : "#374151"};
-                  padding: 2px 8px;
+                  padding: 2px 6px;
                   border-radius: 12px;
-                  font-size: 12px;
+                  font-size: ${isMobile ? "11px" : "12px"};
                   font-weight: 500;
+                  white-space: nowrap;
                 ">
                   ${issue.priority}
                 </span>
               </div>
               
-              <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">
+              <div style="font-size: ${isMobile ? "11px" : "12px"}; color: #6b7280; margin-bottom: 4px;">
                 <strong>${issue.municipalities?.name}</strong>
               </div>
               
               ${
                 issue.address
-                  ? `<div style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">📍 ${issue.address}</div>`
+                  ? `<div style="font-size: ${isMobile ? "11px" : "12px"}; color: #6b7280; margin-bottom: 8px; word-break: break-word;">📍 ${issue.address}</div>`
                   : ""
               }
               
-              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #6b7280;">
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: ${isMobile ? "11px" : "12px"}; color: #6b7280; margin-bottom: 8px;">
                 <span>👍 ${issue.upvotes} votes</span>
                 <span>${new Date(issue.created_at).toLocaleDateString()}</span>
               </div>
               
               <a href="/issues/${issue.id}" style="
                 display: inline-block;
-                margin-top: 8px;
-                padding: 6px 12px;
+                width: 100%;
+                padding: ${isMobile ? "6px 8px" : "6px 12px"};
                 background: linear-gradient(to right, #2563eb, #16a34a);
                 color: white;
                 text-decoration: none;
                 border-radius: 6px;
-                font-size: 12px;
+                font-size: ${isMobile ? "12px" : "13px"};
                 font-weight: 500;
+                text-align: center;
+                box-sizing: border-box;
               ">
                 View Details
               </a>
@@ -187,7 +212,8 @@ export default function IssuesMap({ issues }: IssuesMapProps) {
           `
 
           marker.bindPopup(popupContent, {
-            maxWidth: 300,
+            maxWidth: popupWidth,
+            maxHeight: isMobile ? 400 : 500,
             className: "custom-popup",
           })
 

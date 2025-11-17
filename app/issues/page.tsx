@@ -155,65 +155,65 @@ export default function IssuesMapPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-green-600 rounded-lg flex items-center justify-center">
-              <MapPin className="w-6 h-6 text-white" />
+            <div className="w-9 sm:w-10 h-9 sm:h-10 bg-gradient-to-br from-blue-600 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <MapPin className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">Konnekt My City</h1>
-              <p className="text-sm text-gray-600">Issues Map</p>
+            <div className="min-w-0">
+              <h1 className="text-base sm:text-xl font-bold text-gray-900 truncate">Konnekt My City</h1>
+              <p className="text-xs sm:text-sm text-gray-600 truncate">Issues Map</p>
             </div>
           </Link>
-          <div className="flex items-center gap-3">
-            <Link href="/dashboard">
-              <Button variant="ghost">Dashboard</Button>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link href="/dashboard" className="flex-1 sm:flex-none">
+              <Button variant="ghost" size="sm" className="w-full sm:w-auto text-xs sm:text-sm">Dashboard</Button>
             </Link>
-            <Link href="/report">
-              <Button className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700">
-                Report Issue
+            <Link href="/report" className="flex-1 sm:flex-none">
+              <Button className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-xs sm:text-sm h-9 sm:h-10">
+                Report
               </Button>
             </Link>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Community Issues Map</h1>
-          <p className="text-gray-600">Explore infrastructure issues reported across South African communities</p>
+      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-6">
+        <div className="mb-4 sm:mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Community Issues Map</h1>
+          <p className="text-xs sm:text-base text-gray-600">Explore infrastructure issues reported across South African communities</p>
         </div>
 
-        {/* Filters */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Filter className="w-5 h-5" />
+        {/* Filters - Mobile optimized */}
+        <Card className="mb-4 sm:mb-6 relative z-20">
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Filter className="w-4 sm:w-5 h-4 sm:h-5" />
               Filter Issues
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Search</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 relative z-30">
+              <div className="space-y-2 relative z-30">
+                <label className="text-xs sm:text-sm font-medium">Search</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <Input
                     placeholder="Search issues..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 h-9 sm:h-10 text-sm"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Category</label>
+              <div className="space-y-2 relative z-30">
+                <label className="text-xs sm:text-sm font-medium">Category</label>
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 sm:h-10 text-sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-50">
                     <SelectItem value="all">All Categories</SelectItem>
                     {categories.map((category) => (
                       <SelectItem key={category.id} value={category.name}>
@@ -227,13 +227,13 @@ export default function IssuesMapPage() {
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Municipality</label>
+              <div className="space-y-2 relative z-30">
+                <label className="text-xs sm:text-sm font-medium">Municipality</label>
                 <Select value={selectedMunicipality} onValueChange={setSelectedMunicipality}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 sm:h-10 text-sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-50">
                     <SelectItem value="all">All Municipalities</SelectItem>
                     {municipalities.map((municipality) => (
                       <SelectItem key={municipality.id} value={municipality.name}>
@@ -244,13 +244,13 @@ export default function IssuesMapPage() {
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Status</label>
+              <div className="space-y-2 relative z-30">
+                <label className="text-xs sm:text-sm font-medium">Status</label>
                 <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 sm:h-10 text-sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-50">
                     <SelectItem value="all">All Statuses</SelectItem>
                     <SelectItem value="reported">Reported</SelectItem>
                     <SelectItem value="acknowledged">Acknowledged</SelectItem>
@@ -261,27 +261,27 @@ export default function IssuesMapPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Results</label>
-                <div className="flex items-center h-10 px-3 bg-gray-50 rounded-md">
-                  <span className="text-sm font-medium">{filteredIssues.length} issues</span>
+                <label className="text-xs sm:text-sm font-medium">Results</label>
+                <div className="flex items-center h-9 sm:h-10 px-3 bg-gray-50 rounded-md">
+                  <span className="text-xs sm:text-sm font-medium">{filteredIssues.length}</span>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Map and Issues List */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Map */}
-          <div className="lg:col-span-2">
-            <Card className="h-[600px]">
+        {/* Map and Issues List - Responsive Grid */}
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
+          {/* Map - Full width on mobile, 2/3 on desktop */}
+          <div className="lg:col-span-2 order-2 lg:order-1 relative z-10">
+            <Card className="h-96 sm:h-[500px] lg:h-[600px]">
               <CardContent className="p-0 h-full">
                 {!isLoading && <IssuesMap issues={filteredIssues} />}
                 {isLoading && (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                      <p className="text-gray-600">Loading map...</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Loading map...</p>
                     </div>
                   </div>
                 )}
@@ -289,46 +289,46 @@ export default function IssuesMapPage() {
             </Card>
           </div>
 
-          {/* Issues List */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900">Recent Issues</h2>
-            <div className="space-y-3 max-h-[600px] overflow-y-auto">
+          {/* Issues List - Full width on mobile, 1/3 on desktop */}
+          <div className="order-1 lg:order-2">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Recent Issues</h2>
+            <div className="space-y-2 sm:space-y-3 max-h-96 sm:max-h-[500px] lg:max-h-[600px] overflow-y-auto">
               {filteredIssues.slice(0, 20).map((issue) => (
                 <Card key={issue.id} className="hover:shadow-md transition-shadow cursor-pointer">
-                  <CardContent className="p-4">
+                  <CardContent className="p-3 sm:p-4">
                     <Link href={`/issues/${issue.id}`}>
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">{issue.issue_categories?.icon}</span>
-                          <h3 className="font-medium text-sm line-clamp-1">{issue.title}</h3>
+                      <div className="flex items-start justify-between mb-2 gap-2">
+                        <div className="flex items-start gap-2 min-w-0 flex-1">
+                          <span className="text-lg sm:text-xl flex-shrink-0">{issue.issue_categories?.icon}</span>
+                          <h3 className="font-medium text-xs sm:text-sm line-clamp-2">{issue.title}</h3>
                         </div>
-                        <div className="flex items-center gap-1 text-xs text-gray-500">
+                        <div className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0">
                           <TrendingUp className="w-3 h-3" />
-                          {issue.upvotes}
+                          <span className="text-xs">{issue.upvotes}</span>
                         </div>
                       </div>
 
-                      <p className="text-xs text-gray-600 mb-3 line-clamp-2">{issue.description}</p>
+                      <p className="text-xs text-gray-600 mb-2 sm:mb-3 line-clamp-2">{issue.description}</p>
 
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center justify-between mb-2 gap-1 flex-wrap">
                         <Badge className={`text-xs ${getStatusColor(issue.status)}`}>
                           {issue.status.replace("_", " ")}
                         </Badge>
                         <Badge className={`text-xs ${getPriorityColor(issue.priority)}`}>{issue.priority}</Badge>
                       </div>
 
-                      <div className="flex items-center justify-between text-xs text-gray-500">
-                        <span>{issue.municipalities?.name}</span>
-                        <div className="flex items-center gap-1">
+                      <div className="flex items-center justify-between text-xs text-gray-500 gap-1">
+                        <span className="truncate">{issue.municipalities?.name}</span>
+                        <div className="flex items-center gap-1 flex-shrink-0">
                           <Clock className="w-3 h-3" />
                           {new Date(issue.created_at).toLocaleDateString()}
                         </div>
                       </div>
 
                       {issue.address && (
-                        <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          {issue.address}
+                        <p className="text-xs text-gray-500 mt-1 flex items-center gap-1 line-clamp-1">
+                          <MapPin className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">{issue.address}</span>
                         </p>
                       )}
                     </Link>
@@ -338,9 +338,9 @@ export default function IssuesMapPage() {
 
               {filteredIssues.length === 0 && !isLoading && (
                 <div className="text-center py-8">
-                  <p className="text-gray-500 mb-4">No issues found matching your filters</p>
+                  <p className="text-gray-500 mb-4 text-sm">No issues found matching your filters</p>
                   <Link href="/report">
-                    <Button>Report an Issue</Button>
+                    <Button size="sm" className="text-xs">Report an Issue</Button>
                   </Link>
                 </div>
               )}

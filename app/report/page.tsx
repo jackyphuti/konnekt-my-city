@@ -390,26 +390,31 @@ export default function ReportIssuePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-green-600 rounded-lg flex items-center justify-center">
-              <MapPin className="w-6 h-6 text-white" />
+            <div className="w-9 sm:w-10 h-9 sm:h-10 bg-gradient-to-br from-blue-600 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <MapPin className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">Konnekt My City</h1>
-              <p className="text-sm text-gray-600">Report Issue</p>
+            <div className="min-w-0">
+              <h1 className="text-base sm:text-xl font-bold text-gray-900 truncate">Konnekt My City</h1>
+              <p className="text-xs sm:text-sm text-gray-600 truncate">Report Issue</p>
             </div>
           </Link>
-          <Link href="/dashboard">
-            <Button variant="ghost">Dashboard</Button>
-          </Link>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link href="/issues" className="flex-1 sm:flex-none">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto text-xs sm:text-sm">View Issues</Button>
+            </Link>
+            <Link href="/dashboard" className="flex-1 sm:flex-none">
+              <Button variant="ghost" size="sm" className="w-full sm:w-auto text-xs sm:text-sm">Dashboard</Button>
+            </Link>
+          </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Report an Issue</h1>
-          <p className="text-gray-600">Help improve your community by reporting infrastructure problems</p>
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 max-w-2xl">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Report an Issue</h1>
+          <p className="text-sm sm:text-base text-gray-600">Help improve your community by reporting infrastructure problems</p>
         </div>
 
         <Card>
@@ -483,20 +488,21 @@ export default function ReportIssuePage() {
                 </div>
               )}
               <div className="grid gap-2">
-                <Label htmlFor="title">Issue Title *</Label>
+                <Label htmlFor="title" className="text-sm sm:text-base">Issue Title *</Label>
                 <Input
                   id="title"
                   placeholder="e.g., Large pothole on Main Street"
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  className="h-9 sm:h-10 text-sm"
                 />
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="category">Category *</Label>
+                <Label htmlFor="category" className="text-sm sm:text-base">Category *</Label>
                 <Select value={categoryId} onValueChange={setCategoryId} required>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 sm:h-10 text-sm">
                     <SelectValue placeholder="Select issue category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -513,9 +519,9 @@ export default function ReportIssuePage() {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="municipality">Municipality *</Label>
+                <Label htmlFor="municipality" className="text-sm sm:text-base">Municipality *</Label>
                 <Select value={municipalityId} onValueChange={setMunicipalityId} required>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 sm:h-10 text-sm">
                     <SelectValue placeholder="Select municipality" />
                   </SelectTrigger>
                   <SelectContent>
@@ -529,7 +535,7 @@ export default function ReportIssuePage() {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="description">Description *</Label>
+                <Label htmlFor="description" className="text-sm sm:text-base">Description *</Label>
                 <Textarea
                   id="description"
                   placeholder="Describe the issue in detail. Include any safety concerns or impact on the community."
@@ -537,73 +543,78 @@ export default function ReportIssuePage() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
+                  className="text-sm"
                 />
               </div>
 
               <div className="grid gap-4">
-                <Label>Location</Label>
+                <Label className="text-sm sm:text-base">Location</Label>
                 <div className="flex gap-2">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={getCurrentLocation}
                     disabled={isGettingLocation}
-                    className="flex items-center gap-2 bg-transparent"
+                    className="flex-1 sm:flex-none items-center gap-2 bg-transparent text-xs sm:text-sm h-9 sm:h-10"
                   >
                     <MapPin className="w-4 h-4" />
-                    {isGettingLocation ? "Getting location..." : "Use Current Location"}
+                    <span className="hidden sm:inline">{isGettingLocation ? "Getting location..." : "Use Current Location"}</span>
+                    <span className="sm:hidden">{isGettingLocation ? "Loading..." : "Location"}</span>
                   </Button>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="latitude">Latitude</Label>
+                    <Label htmlFor="latitude" className="text-xs sm:text-sm">Latitude</Label>
                     <Input
                       id="latitude"
                       placeholder="-26.2041"
                       value={latitude}
                       onChange={(e) => setLatitude(e.target.value)}
+                      className="h-9 sm:h-10 text-sm"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="longitude">Longitude</Label>
+                    <Label htmlFor="longitude" className="text-xs sm:text-sm">Longitude</Label>
                     <Input
                       id="longitude"
                       placeholder="28.0473"
                       value={longitude}
                       onChange={(e) => setLongitude(e.target.value)}
+                      className="h-9 sm:h-10 text-sm"
                     />
                   </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="address">Address or Description</Label>
+                  <Label htmlFor="address" className="text-sm sm:text-base">Address or Description</Label>
                   <Input
                     id="address"
-                    placeholder="e.g., Corner of Main St and Church St, Johannesburg"
+                    placeholder="e.g., Corner of Main St and Church St"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
+                    className="h-9 sm:h-10 text-sm"
                   />
                 </div>
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="image">Photo (Optional)</Label>
-                <div className="flex items-center gap-4">
+                <Label htmlFor="image" className="text-sm sm:text-base">Photo (Optional)</Label>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                   <Input
                     id="image"
                     type="file"
                     accept="image/*"
                     onChange={handleImageSelect}
                     disabled={isCompressing}
-                    className="flex-1"
+                    className="flex-1 text-xs"
                   />
-                  <Badge variant="secondary" className="flex items-center gap-1">
+                  <Badge variant="secondary" className="flex items-center gap-1 w-fit text-xs sm:text-sm">
                     <Camera className="w-3 h-3" />
                     Recommended
                   </Badge>
                 </div>
-                <p className="text-sm text-gray-500">A photo helps municipal officials understand the issue better. Images are automatically compressed.</p>
+                <p className="text-xs sm:text-sm text-gray-500">A photo helps officials understand the issue better. Images are automatically compressed.</p>
 
-                {isCompressing && <p className="text-sm text-blue-600">Compressing image...</p>}
+                {isCompressing && <p className="text-xs sm:text-sm text-blue-600">Compressing image...</p>}
 
                 {compressionStats && (
                   <div className="text-xs text-muted-foreground">
@@ -612,7 +623,7 @@ export default function ReportIssuePage() {
                 )}
 
                 {imagePreview && (
-                  <div className="relative w-full h-48 rounded-lg overflow-hidden border bg-gray-100">
+                  <div className="relative w-full h-40 sm:h-48 rounded-lg overflow-hidden border bg-gray-100">
                     <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                     <button
                       type="button"
@@ -630,24 +641,24 @@ export default function ReportIssuePage() {
               </div>
 
               {error && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-sm text-red-600">{error}</p>
+                <div className="p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-xs sm:text-sm text-red-600">{error}</p>
                 </div>
               )}
 
-              <div className="flex gap-4 items-center">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-stretch sm:items-center">
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-sm sm:text-base h-10 sm:h-11"
                 >
                   {isLoading ? "Submitting..." : "Submit Issue Report"}
                 </Button>
-                <Button type="button" variant="outline" onClick={handleSaveDraft}>
+                <Button type="button" variant="outline" onClick={handleSaveDraft} className="text-xs sm:text-base h-10 sm:h-11">
                   {draftSaved ? "Draft Saved" : "Save Draft"}
                 </Button>
-                <Link href="/dashboard">
-                  <Button type="button" variant="ghost">
+                <Link href="/dashboard" className="flex-1 sm:flex-none">
+                  <Button type="button" variant="ghost" className="w-full text-xs sm:text-base h-10 sm:h-11">
                     Cancel
                   </Button>
                 </Link>

@@ -32,7 +32,25 @@ export default function LoginPage() {
         password,
       })
       if (error) throw error
-      router.push("/dashboard")
+
+      // Get user profile to check user type
+      const { data: authUser } = await supabase.auth.getUser()
+      if (authUser.user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("user_type")
+          .eq("id", authUser.user.id)
+          .single()
+
+        // Redirect based on user type
+        if (profile?.user_type === "municipal_official") {
+          router.push("/municipal")
+        } else {
+          router.push("/dashboard")
+        }
+      } else {
+        router.push("/dashboard")
+      }
     } catch (error: unknown) {
       if (error instanceof Error && error.message.includes("Supabase is not configured")) {
         setError("Database connection not configured. Please contact the administrator or check the setup guide.")
@@ -155,11 +173,19 @@ export default function LoginPage() {
                   {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
               </div>
-              <div className="mt-6 text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <Link href="/auth/sign-up" className="text-blue-600 hover:underline font-medium">
-                  Sign up
-                </Link>
+              <div className="mt-6 text-center text-sm space-y-3">
+                <p>
+                  Don&apos;t have an account?{" "}
+                  <Link href="/auth/sign-up" className="text-blue-600 hover:underline font-medium">
+                    Sign up
+                  </Link>
+                </p>
+                <p className="border-t pt-3">
+                  Are you a municipal official?{" "}
+                  <Link href="/auth/municipal-sign-up" className="text-green-600 hover:underline font-medium">
+                    Register here
+                  </Link>
+                </p>
               </div>
             </form>
           </CardContent>

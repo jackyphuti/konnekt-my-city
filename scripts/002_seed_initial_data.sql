@@ -11,8 +11,10 @@ INSERT INTO public.municipalities (name, province, contact_email, contact_phone)
 INSERT INTO public.issue_categories (name, description, icon, color) VALUES
 ('Potholes', 'Road surface damage and potholes', '🕳️', '#EF4444'),
 ('Water Issues', 'Water leaks, burst pipes, and water quality problems', '💧', '#3B82F6'),
+('Water Leakage', 'Visible water leaks from pipes and infrastructure', '💨', '#0EA5E9'),
 ('Electricity', 'Power outages, street lighting, and electrical issues', '⚡', '#F59E0B'),
 ('Waste Management', 'Garbage collection, illegal dumping, and recycling', '🗑️', '#10B981'),
+('Garbage Report', 'Overflowing garbage bins and improper waste disposal', '🗑️', '#059669'),
 ('Traffic & Transport', 'Traffic lights, road signs, and public transport', '🚦', '#8B5CF6'),
 ('Parks & Recreation', 'Public spaces, playgrounds, and recreational facilities', '🌳', '#059669'),
 ('Housing', 'Housing issues, informal settlements, and building maintenance', '🏠', '#DC2626'),

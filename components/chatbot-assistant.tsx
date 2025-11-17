@@ -93,7 +93,11 @@ export function ChatbotAssistant() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 bg-gradient-to-br from-blue-600 to-green-600 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 flex items-center justify-center text-white"
+        className="fixed z-50 w-14 h-14 bg-gradient-to-br from-blue-600 to-green-600 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 flex items-center justify-center text-white"
+        style={{ 
+          bottom: "calc(1.5rem + 64px)",
+          right: "1.5rem"
+        }}
         title="Open chat assistant"
       >
         <MessageCircle className="w-6 h-6" />
@@ -102,93 +106,120 @@ export function ChatbotAssistant() {
   }
 
   return (
-    <Card className={`fixed bottom-6 right-6 z-40 w-96 shadow-2xl transition-all ${isMinimized ? "h-14" : "h-[600px]"}`}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 border-b">
-        <div className="flex items-center gap-2">
-          <MessageCircle className="w-5 h-5 text-blue-600" />
-          <div>
-            <CardTitle className="text-lg">Konnekt Assistant</CardTitle>
-            <CardDescription className="text-xs">Always here to help</CardDescription>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setIsMinimized(!isMinimized)}
-            className="p-1 hover:bg-gray-100 rounded"
-            title={isMinimized ? "Maximize" : "Minimize"}
-          >
-            {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
-          </button>
-          <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-gray-100 rounded" title="Close">
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      </CardHeader>
+    <>
+      {/* Overlay - Only on mobile when chat is open */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/0 md:bg-black/0 z-40 md:z-0"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
 
-      {!isMinimized && (
-        <>
-          <CardContent className="flex-1 overflow-y-auto p-4 h-[480px] space-y-4">
-            {messages.map((message) => (
-              <div key={message.id} className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={`max-w-xs px-4 py-2 rounded-lg ${
-                    message.type === "user"
-                      ? "bg-blue-600 text-white rounded-br-none"
-                      : "bg-gray-100 text-gray-900 rounded-bl-none"
-                  }`}
-                >
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                  <span className={`text-xs ${message.type === "user" ? "text-blue-100" : "text-gray-500"} block mt-1`}>
-                    {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                  </span>
-                </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 px-4 py-2 rounded-lg rounded-bl-none">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+      {/* Chatbot Card */}
+      <Card 
+        className={`fixed z-50 shadow-2xl transition-all w-full sm:w-96 max-h-screen sm:max-h-[600px] ${
+          isMinimized ? "h-14" : "h-[500px] sm:h-[600px]"
+        }`}
+        style={{
+          bottom: isOpen ? 0 : "auto",
+          left: 0,
+          right: 0,
+          margin: "0 auto",
+          borderBottomLeftRadius: isOpen ? 0 : "0.625rem",
+          borderBottomRightRadius: isOpen ? 0 : "0.625rem",
+        }}
+      >
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 border-b bg-gradient-to-r from-blue-50 to-green-50">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <MessageCircle className="w-5 h-5 text-blue-600 flex-shrink-0" />
+            <div className="min-w-0">
+              <CardTitle className="text-base sm:text-lg truncate">Konnekt Assistant</CardTitle>
+              <CardDescription className="text-xs truncate">Always here to help</CardDescription>
+            </div>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <button
+              onClick={() => setIsMinimized(!isMinimized)}
+              className="p-1 hover:bg-white/50 rounded transition-colors"
+              title={isMinimized ? "Maximize" : "Minimize"}
+            >
+              {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
+            </button>
+            <button 
+              onClick={() => setIsOpen(false)} 
+              className="p-1 hover:bg-white/50 rounded transition-colors" 
+              title="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </CardHeader>
+
+        {!isMinimized && (
+          <>
+            <CardContent className="flex-1 overflow-y-auto p-3 sm:p-4 h-[380px] sm:h-[480px] space-y-3 sm:space-y-4 bg-white">
+              {messages.map((message) => (
+                <div key={message.id} className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}>
+                  <div
+                    className={`max-w-xs px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base ${
+                      message.type === "user"
+                        ? "bg-blue-600 text-white rounded-br-none"
+                        : "bg-gray-100 text-gray-900 rounded-bl-none"
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap break-words">{message.content}</p>
+                    <span className={`text-xs ${message.type === "user" ? "text-blue-100" : "text-gray-500"} block mt-1`}>
+                      {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </span>
                   </div>
                 </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </CardContent>
+              ))}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-gray-100 px-3 sm:px-4 py-2 rounded-lg rounded-bl-none">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </CardContent>
 
-          <div className="border-t p-4 space-y-3">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Ask me anything..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                disabled={isLoading}
-                className="text-sm"
-              />
-              <Button onClick={handleSendMessage} disabled={isLoading} size="sm" className="bg-blue-600 hover:bg-blue-700">
-                <Send className="w-4 h-4" />
-              </Button>
+            <div className="border-t p-3 sm:p-4 space-y-3 bg-white">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Ask me anything..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                  disabled={isLoading}
+                  className="text-xs sm:text-sm h-9 sm:h-10"
+                />
+                <Button onClick={handleSendMessage} disabled={isLoading} size="sm" className="bg-blue-600 hover:bg-blue-700 px-2 sm:px-3">
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => setInput("How do I report an issue?")}
+                  className="text-xs bg-gray-100 hover:bg-gray-200 p-2 rounded transition-colors text-gray-700"
+                >
+                  Report Issue
+                </button>
+                <button
+                  onClick={() => setInput("How do I find issues?")}
+                  className="text-xs bg-gray-100 hover:bg-gray-200 p-2 rounded transition-colors text-gray-700"
+                >
+                  Find Issues
+                </button>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => setInput("How do I report an issue?")}
-                className="text-xs bg-gray-100 hover:bg-gray-200 p-2 rounded transition-colors text-gray-700"
-              >
-                Report Issue
-              </button>
-              <button
-                onClick={() => setInput("How do I find issues?")}
-                className="text-xs bg-gray-100 hover:bg-gray-200 p-2 rounded transition-colors text-gray-700"
-              >
-                Find Issues
-              </button>
-            </div>
-          </div>
-        </>
-      )}
-    </Card>
+          </>
+        )}
+      </Card>
+    </>
   )
 }
