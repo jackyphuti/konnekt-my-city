@@ -3,25 +3,85 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light theme - higher contrast defaults for readability */
+  /* Use HSL component strings so Tailwind's `hsl(var(--...))` works as intended */
+  --background: 150 50% 98%; /* very light, subtle green tint */
+  --foreground: 210 28% 6%; /* strong dark text */
+  --card: 0 0% 100%; /* white cards */
+  --card-foreground: 210 28% 6%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 210 28% 6%;
+  --primary: 180 60% 42%; /* teal-ish primary */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 230 100% 98%;
+  --secondary-foreground: 210 28% 6%;
+  --muted: 210 20% 96%;
+  --muted-foreground: 230 9% 49%;
+  --accent: 170 60% 95%;
+  --accent-foreground: 210 28% 6%;
+  --destructive: 0 78% 56%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 210 14% 85%;
+  --input: 210 14% 85%;
+  --ring: 210 90% 64%;
+  --chart-1: 180 60% 42%;
+  --chart-2: 215 90% 58%;
+  --chart-3: 250 60% 60%;
+  --chart-4: 40 90% 56%;
+  --chart-5: 145 65% 45%;
+  --radius: 0.625rem;
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 210 28% 6%;
+  --sidebar-primary: 180 60% 42%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 170 60% 95%;
+  --sidebar-accent-foreground: 210 28% 6%;
+  --sidebar-border: 210 20% 94%;
+  --sidebar-ring: 210 90% 64%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.dark {
+  /* Dark theme - readable dark palette */
+  /* Dark theme - readable dark palette (HSL components) */
+  --background: 210 28% 6%; /* dark slate */
+  --foreground: 210 26% 92%; /* light text */
+  --card: 210 35% 4%;
+  --card-foreground: 210 26% 92%;
+  --popover: 210 35% 4%;
+  --popover-foreground: 210 26% 92%;
+  --primary: 190 88% 38%;
+  --primary-foreground: 210 40% 4%;
+  --secondary: 210 28% 6%;
+  --secondary-foreground: 210 26% 92%;
+  --muted: 210 35% 4%;
+  --muted-foreground: 210 20% 58%;
+  --accent: 200 60% 6%;
+  --accent-foreground: 210 26% 92%;
+  --destructive: 0 78% 56%;
+  --destructive-foreground: 210 8% 8%;
+  --border: 210 20% 18%;
+  --input: 210 20% 18%;
+  --ring: 210 90% 64%;
+  --chart-1: 190 88% 38%;
+  --chart-2: 215 90% 58%;
+  --chart-3: 145 65% 45%;
+  --chart-4: 40 90% 56%;
+  --chart-5: 0 78% 56%;
+  --sidebar: 210 30% 3%;
+  --sidebar-foreground: 210 26% 92%;
+  --sidebar-primary: 190 88% 38%;
+  --sidebar-primary-foreground: 210 26% 92%;
+  --sidebar-accent: 200 60% 6%;
+  --sidebar-accent-foreground: 210 26% 92%;
+  --sidebar-border: 210 20% 12%;
+  --sidebar-ring: 210 90% 64%;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  body {
+    @apply bg-background text-foreground;
   }
 }
