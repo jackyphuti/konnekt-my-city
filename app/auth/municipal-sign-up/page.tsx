@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
 import { Building2, Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -37,6 +37,15 @@ export default function MunicipalSignUpPage() {
   const [loadingMunicipalities, setLoadingMunicipalities] = useState(true)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Check for OAuth errors from callback
+  useEffect(() => {
+    const errorParam = searchParams.get("error")
+    if (errorParam) {
+      setError(decodeURIComponent(errorParam))
+    }
+  }, [searchParams])
 
   useEffect(() => {
     const fetchMunicipalities = async () => {
